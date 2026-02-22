@@ -87,7 +87,7 @@ The application follows a modular pipeline designed for efficiency and scalabili
     python bot.py
     ```
 
-## 🔮 Future Improvements
+## Future Improvements
 
 *   **Frame-by-Frame Analysis:** Implement timeline data fetching to analyze specific skirmishes and teamfight positioning.
 *   **Visualizations:** Generate graphs for Gold/XP leads using `matplotlib` or `seaborn` and embed them in Discord responses.
