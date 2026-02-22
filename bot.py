@@ -48,7 +48,7 @@ def get_account_puuid(game_name: str, tag_line: str) -> str:
     return data["puuid"]
 
 
-def get_match_ids(puuid: str, total_games: int = 100) -> list[str]:
+def get_match_ids(puuid: str, total_games: int = 20) -> list[str]:
     match_ids: list[str] = []
     start = 0
 
@@ -244,7 +244,7 @@ class LolCoachBot(discord.Client):
 client = LolCoachBot()
 
 
-@client.tree.command(name="coach", description="Analyze last 100 games and provide coaching insights with Gemini AI.")
+@client.tree.command(name="coach", description="Analyze last 20 games and provide coaching insights with Gemini AI.")
 @app_commands.describe(game_name="Riot game name", tag_line="Riot tagline")
 async def coach_command(
     interaction: discord.Interaction, game_name: str | None = None, tag_line: str | None = None
@@ -266,7 +266,7 @@ async def coach_command(
 
     try:
         puuid = get_account_puuid(game_name, tag_line)
-        match_ids = get_match_ids(puuid, total_games=100)
+        match_ids = get_match_ids(puuid, total_games=20)
     except Exception as e:
         await interaction.followup.send(f"Failed to fetch match list: {e}")
         return
