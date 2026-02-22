@@ -1,81 +1,95 @@
-# League of Legends Coaching Bot
+# AI-Powered League of Legends Coach
 
-This project is a Discord bot designed to analyze a player's League of Legends performance. It fetches data from the last 20 matches using the Riot Games API and uses Google's Gemini AI to provide personalized coaching insights and advice for improvement.
+An advanced Discord bot leveraging the Riot Games API and Google's Gemini Pro LLM to provide automated, data-driven coaching for League of Legends players. This project demonstrates proficiency in backend development, third-party API integration, data analysis, and prompt engineering.
 
-## Features
+## 🚀 Project Overview
 
-- **Match Analysis**: Retrieves statistics from the last 20 matches for a specified player.
-- **AI Coaching**: Uses Gemini AI to analyze performance metrics (KDA, CS/min, vision score, damage, etc.) and generate actionable advice.
-- **Discord Integration**: Simple `/coach` command to trigger the analysis directly within Discord.
-- **Data Export**: Includes a utility script (`export.py`) to export match data to CSV, JSON, and TOON formats.
+The goal of this project is to democratize access to high-level game analysis. By fetching raw match data and processing it through a Large Language Model (LLM), the bot generates personalized, actionable advice comparable to human coaching. It analyzes key performance indicators (KPIs) from a player's last 20 matches to identify patterns, strengths, and areas for improvement.
 
-## Prerequisites
+## 🛠 Tech Stack & Key Skills
 
-Before running the bot, ensure you have the following:
+*   **Language:** Python 3.12+
+*   **Discord Integration:** `discord.py` (Asynchronous command handling, slash commands)
+*   **Data Source:** Riot Games API (MatchV5, SummonerV4, AccountV1)
+*   **Artificial Intelligence:** Google Gemini 1.5 Pro (via `google-generativeai`)
+*   **Data Processing:** Pandas (Dataframes, aggregation), JSON manipulation
+*   **Serialization:** TOON (Token-Oriented Object Notation) for optimized LLM context usage
+*   **Environment Management:** `python-dotenv` for secure configuration
 
-- **Python 3.8+** installed.
-- **Discord Bot Token**: Create a bot on the [Discord Developer Portal](https://discord.com/developers/applications).
-- **Riot Games API Key**: Obtain a key from the [Riot Developer Portal](https://developer.riotgames.com/).
-- **Gemini API Key**: Get an API key from [Google AI Studio](https://aistudio.google.com/).
+## 🏗 Architecture & Workflow
 
-## Installation
+The application follows a modular pipeline designed for efficiency and scalability:
 
-1.  **Clone the repository** (if applicable) or download the source code.
+1.  **User Interaction:** A user invokes the `/coach` slash command with their Riot ID and Tagline.
+2.  **Data Ingestion:**
+    *   Resolves the user's PUUID via the Riot Account API.
+    *   Fetches the list of the last 20 match IDs via the MatchV5 API.
+    *   Iteratively retrieves detailed match data (participants, timelines, challenges).
+3.  **Data Processing:**
+    *   Filters and extracts relevant player metrics (KDA, CS/min, Vision Score, Damage Share, Objective Control).
+    *   Normalizes data into a structured format suitable for analysis.
+4.  **AI Analysis:**
+    *   Constructs a context-aware prompt using the aggregated match data.
+    *   Sends the prompt to the Gemini Pro model.
+    *   Receives a structured critique covering mechanics, macro-play, and strategic recommendations.
+5.  **Response Delivery:**
+    *   Chunks the potentially long AI response to fit within Discord's message limits.
+    *   Delivers the coaching report back to the user in the channel.
 
-2.  **Install dependencies**:
+## ✨ Key Features
+
+*   **Automated Match History Analysis:** Instantly processes 20 recent games to find trends.
+*   **Deep Statistical Insight:** Goes beyond basic KDA to analyze:
+    *   Economy (Gold/min, Itemization efficiency)
+    *   Laning Phase (CS/min, XP differentials, Solo kills)
+    *   Team Contribution (Kill Participation, Damage Share, Vision Control)
+*   **Personalized Coaching:** The AI adapts its advice based on the specific champion pool and role played.
+*   **Data Export Utility:** Includes a standalone script (`export.py`) to dump match data into CSV, JSON, and TOON formats for offline analysis or dataset creation.
+
+## 📦 Installation & Setup
+
+### Prerequisites
+
+*   Python 3.8 or higher
+*   A Discord Bot Token ([Discord Developer Portal](https://discord.com/developers/applications))
+*   A Riot Games API Key ([Riot Developer Portal](https://developer.riotgames.com/))
+*   A Google Gemini API Key ([Google AI Studio](https://aistudio.google.com/))
+
+### Steps
+
+1.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/yourusername/lol-ai-coach.git
+    cd lol-ai-coach
+    ```
+
+2.  **Install Dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
 
-## Configuration
+3.  **Configuration:**
+    Create a `.env` file in the root directory:
+    ```dotenv
+    DISCORD_BOT_TOKEN=your_discord_token
+    RIOT_API_KEY=your_riot_key
+    GEMINI_API_KEY=your_gemini_key
 
-Create a `.env` file in the root directory of the project and add your API keys and configuration:
+    # Optional Defaults
+    DEFAULT_GAME_NAME=YourRiotID
+    DEFAULT_TAG_LINE=YourTagLine
+    REGION_ROUTING=europe
+    GEMINI_MODEL=gemini-1.5-pro
+    ```
 
-```dotenv
-DISCORD_BOT_TOKEN=your_discord_bot_token
-RIOT_API_KEY=your_riot_api_key
-GEMINI_API_KEY=your_gemini_api_key
+4.  **Run the Bot:**
+    ```bash
+    python bot.py
+    ```
 
-# Optional defaults
-DEFAULT_GAME_NAME=YourRiotName
-DEFAULT_TAG_LINE=YourTagLine
-REGION_ROUTING=europe # e.g., americas, asia, europe
-GEMINI_MODEL=gemini-1.5-pro
-PROMPT_PATH=prompt_lol.md
-```
+## 🔮 Future Improvements
 
-## Usage
-
-### Running the Bot
-
-Start the bot by running the `bot.py` script:
-
-```bash
-python bot.py
-```
-
-### Discord Command
-
-Once the bot is online and invited to your server, use the slash command:
-
-```
-/coach [game_name] [tag_line]
-```
-
-- `game_name`: Your Riot Game Name (optional if default is set in `.env`).
-- `tag_line`: Your Riot Tag Line (optional if default is set in `.env`).
-
-The bot will analyze your last 20 matches and reply with a detailed coaching report.
-
-### Data Export Utility
-
-You can also use the `export.py` script to fetch and save match data locally:
-
-```bash
-python export.py
-```
-*Note: You may need to modify the `API_KEY`, `GAME_NAME`, and `TAG_LINE` variables directly in `export.py` or adapt it to use environment variables.*
-
-## Note on Language
-
-The current analysis prompt (`prompt_lol.md`) is in French. The bot's output will therefore be in French. You can modify this file to change the language or the focus of the coaching advice.
+*   **Frame-by-Frame Analysis:** Implement timeline data fetching to analyze specific skirmishes and teamfight positioning.
+*   **Visualizations:** Generate graphs for Gold/XP leads using `matplotlib` or `seaborn` and embed them in Discord responses.
+*   **Database Integration:** Store user profiles and historical analysis to track improvement over time.
+*   **Multi-Region Support:** Enhanced routing logic to support players from all Riot regions dynamically.
