@@ -2,3 +2,5 @@ discord.py>=2.3.2
 python-dotenv>=1.0.1
 requests>=2.31.0
 google-generativeai>=0.8.3
+pandas>=2.0.0
+py-toon-format>=0.1.0
