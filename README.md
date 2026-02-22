@@ -1,22 +1,22 @@
-# AI-Powered League of Legends Coach
+# League of Legends Coach
 
 An advanced Discord bot leveraging the Riot Games API and Google's Gemini Pro LLM to provide automated, data-driven coaching for League of Legends players. This project demonstrates proficiency in backend development, third-party API integration, data analysis, and prompt engineering.
 
-## 🚀 Project Overview
+## Project Overview
 
 The goal of this project is to democratize access to high-level game analysis. By fetching raw match data and processing it through a Large Language Model (LLM), the bot generates personalized, actionable advice comparable to human coaching. It analyzes key performance indicators (KPIs) from a player's last 20 matches to identify patterns, strengths, and areas for improvement.
 
-## 🛠 Tech Stack & Key Skills
+## Tech Stack & Key Skills
 
 *   **Language:** Python 3.12+
 *   **Discord Integration:** `discord.py` (Asynchronous command handling, slash commands)
 *   **Data Source:** Riot Games API (MatchV5, SummonerV4, AccountV1)
-*   **Artificial Intelligence:** Google Gemini 1.5 Pro (via `google-generativeai`)
+*   **Artificial Intelligence:** Google Gemini 2.5 flash (via `google-generativeai`)
 *   **Data Processing:** Pandas (Dataframes, aggregation), JSON manipulation
 *   **Serialization:** TOON (Token-Oriented Object Notation) for optimized LLM context usage
 *   **Environment Management:** `python-dotenv` for secure configuration
 
-## 🏗 Architecture & Workflow
+## Architecture & Workflow
 
 The application follows a modular pipeline designed for efficiency and scalability:
 
@@ -30,13 +30,13 @@ The application follows a modular pipeline designed for efficiency and scalabili
     *   Normalizes data into a structured format suitable for analysis.
 4.  **AI Analysis:**
     *   Constructs a context-aware prompt using the aggregated match data.
-    *   Sends the prompt to the Gemini Pro model.
+    *   Sends the prompt to the Gemini model.
     *   Receives a structured critique covering mechanics, macro-play, and strategic recommendations.
 5.  **Response Delivery:**
     *   Chunks the potentially long AI response to fit within Discord's message limits.
     *   Delivers the coaching report back to the user in the channel.
 
-## ✨ Key Features
+## Key Features
 
 *   **Automated Match History Analysis:** Instantly processes 20 recent games to find trends.
 *   **Deep Statistical Insight:** Goes beyond basic KDA to analyze:
@@ -46,7 +46,7 @@ The application follows a modular pipeline designed for efficiency and scalabili
 *   **Personalized Coaching:** The AI adapts its advice based on the specific champion pool and role played.
 *   **Data Export Utility:** Includes a standalone script (`export.py`) to dump match data into CSV, JSON, and TOON formats for offline analysis or dataset creation.
 
-## 📦 Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 
