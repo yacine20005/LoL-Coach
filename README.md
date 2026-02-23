@@ -75,12 +75,10 @@ The application follows a modular pipeline designed for efficiency and scalabili
     RIOT_API_KEY=your_riot_key
     GEMINI_API_KEY=your_gemini_key
 
-    # Optional Defaults
-    DEFAULT_GAME_NAME=YourRiotID
-    DEFAULT_TAG_LINE=YourTagLine
-    EXPORT_GAME_NAME=YourRiotID
-    EXPORT_TAG_LINE=YourTagLine
-    EXPORT_TOTAL_GAMES=100
+    # Riot ID
+    GAME_NAME=YourRiotID
+    TAG_LINE=YourTagLine
+    TOTAL_GAMES=100
     REGION_ROUTING=europe
     GEMINI_MODEL=gemini-1.5-pro
     ```
