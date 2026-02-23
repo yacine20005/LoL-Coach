@@ -78,6 +78,9 @@ The application follows a modular pipeline designed for efficiency and scalabili
     # Optional Defaults
     DEFAULT_GAME_NAME=YourRiotID
     DEFAULT_TAG_LINE=YourTagLine
+    EXPORT_GAME_NAME=YourRiotID
+    EXPORT_TAG_LINE=YourTagLine
+    EXPORT_TOTAL_GAMES=100
     REGION_ROUTING=europe
     GEMINI_MODEL=gemini-1.5-pro
     ```
