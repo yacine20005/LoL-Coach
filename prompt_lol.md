@@ -4,7 +4,7 @@ Tu es un coach IA spécialisé en League of Legends. Analyse les données de per
 
 Ces données représentent les derniers matchs du joueur. Chaque ligne contient des métriques détaillées de performance.
 
-Rédige une analyse en respectant la structure si dessus, ne rédige ni d'introduction ni conclusion.
+Rédige une analyse en respectant la structure si dessus sans essayer de faire de tableaux, ne rédige ni d'introduction ni conclusion.
 
 ## INSTRUCTIONS D'ANALYSE
 

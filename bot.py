@@ -6,7 +6,7 @@ import requests
 import discord
 from discord import app_commands
 from dotenv import load_dotenv
-import google.genai as genai
+import google.generativeai as genai
 
 load_dotenv()
 
@@ -15,6 +15,7 @@ RIOT_API_KEY = os.getenv("RIOT_API_KEY", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 DEFAULT_GAME_NAME = os.getenv("DEFAULT_GAME_NAME", "")
 DEFAULT_TAG_LINE = os.getenv("DEFAULT_TAG_LINE", "")
+TOTAL_GAMES = int(os.getenv("TOTAL_GAMES", "20"))
 REGION_ROUTING = os.getenv("REGION_ROUTING", "europe")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 PROMPT_PATH = os.getenv("PROMPT_PATH", "prompt_lol.md")
@@ -73,12 +74,21 @@ def get_match_ids(puuid: str, total_games: int = 20) -> list[str]:
 def fetch_match(match_id: str, retries: int = 3) -> dict | None:
     url = f"https://{REGION_ROUTING}.api.riotgames.com/lol/match/v5/matches/{match_id}"
     for attempt in range(retries):
-        response = requests.get(url, headers=HEADERS, timeout=30)
-        if response.status_code == 429:
+        try:
+            response = requests.get(url, headers=HEADERS, timeout=30)
+            if response.status_code == 429:
+                time.sleep(2 + attempt * 2)
+                continue
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.Timeout:
             time.sleep(2 + attempt * 2)
             continue
-        response.raise_for_status()
-        return response.json()
+        except requests.exceptions.RequestException:
+            if attempt == retries - 1:
+                return None
+            time.sleep(2 + attempt * 2)
+            continue
     return None
 
 
@@ -245,7 +255,7 @@ class LolCoachBot(discord.Client):
 client = LolCoachBot()
 
 
-@client.tree.command(name="coach", description="Analyze last 20 games and provide coaching insights with Gemini AI.")
+@client.tree.command(name="coach", description="Analyze recent games and provide coaching insights with Gemini AI.")
 @app_commands.describe(game_name="Riot game name", tag_line="Riot tagline")
 async def coach_command(
     interaction: discord.Interaction, game_name: str | None = None, tag_line: str | None = None
@@ -267,14 +277,17 @@ async def coach_command(
 
     try:
         puuid = await asyncio.to_thread(get_account_puuid, game_name, tag_line)
-        match_ids = await asyncio.to_thread(get_match_ids, puuid, 20)
+        match_ids = await asyncio.to_thread(get_match_ids, puuid, TOTAL_GAMES)
     except Exception as e:
         await interaction.followup.send(f"Failed to fetch match list: {e}")
         return
 
     games_data: list[dict] = []
     for idx, match_id in enumerate(match_ids, start=1):
-        match_data = await asyncio.to_thread(fetch_match, match_id)
+        try:
+            match_data = await asyncio.to_thread(fetch_match, match_id)
+        except Exception:
+            match_data = None
         if not match_data or "info" not in match_data:
             continue
         player_data = extract_player_data(match_data["info"], puuid)
