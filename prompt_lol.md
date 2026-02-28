@@ -2,7 +2,9 @@
 
 Tu es un coach IA spécialisé en League of Legends. Analyse les données de performance suivantes d'un joueur et fournis une analyse détaillée et actionnelle.
 
-Ces données représentent les 100 derniers matchs du joueur. Chaque ligne contient des métriques détaillées de performance.
+Ces données représentent les derniers matchs du joueur. Chaque ligne contient des métriques détaillées de performance.
+
+Rédige une analyse en respectant la structure si dessus, ne rédige ni d'introduction ni conclusion.
 
 ## INSTRUCTIONS D'ANALYSE
 
@@ -71,8 +73,6 @@ Donne 5-7 recommandations concrètes et rangées par priorité:
 - Actions clés à reproduire/éviter
 
 ### 9. PLAN D'AMÉLIORATION
-
-Structure :
 
 - KPIs à tracker
 

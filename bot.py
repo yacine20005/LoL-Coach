@@ -1,11 +1,12 @@
 import os
 import json
 import time
+import asyncio
 import requests
 import discord
 from discord import app_commands
 from dotenv import load_dotenv
-import google.generativeai as genai
+import google.genai as genai
 
 load_dotenv()
 
@@ -15,7 +16,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 DEFAULT_GAME_NAME = os.getenv("DEFAULT_GAME_NAME", "")
 DEFAULT_TAG_LINE = os.getenv("DEFAULT_TAG_LINE", "")
 REGION_ROUTING = os.getenv("REGION_ROUTING", "europe")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-pro")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 PROMPT_PATH = os.getenv("PROMPT_PATH", "prompt_lol.md")
 
 HEADERS = {"X-Riot-Token": RIOT_API_KEY}
@@ -265,21 +266,21 @@ async def coach_command(
         return
 
     try:
-        puuid = get_account_puuid(game_name, tag_line)
-        match_ids = get_match_ids(puuid, total_games=20)
+        puuid = await asyncio.to_thread(get_account_puuid, game_name, tag_line)
+        match_ids = await asyncio.to_thread(get_match_ids, puuid, 20)
     except Exception as e:
         await interaction.followup.send(f"Failed to fetch match list: {e}")
         return
 
     games_data: list[dict] = []
     for idx, match_id in enumerate(match_ids, start=1):
-        match_data = fetch_match(match_id)
+        match_data = await asyncio.to_thread(fetch_match, match_id)
         if not match_data or "info" not in match_data:
             continue
         player_data = extract_player_data(match_data["info"], puuid)
         if player_data:
             games_data.append(player_data)
-        time.sleep(1.5)
+        await asyncio.sleep(1.5)
 
     if not games_data:
         await interaction.followup.send("No games data found for this player.")
@@ -289,7 +290,7 @@ async def coach_command(
         genai.configure(api_key=GEMINI_API_KEY)
         model = genai.GenerativeModel(GEMINI_MODEL)
         prompt = build_prompt(games_data)
-        response = model.generate_content(prompt)
+        response = await asyncio.to_thread(model.generate_content, prompt)
         analysis_text = response.text or "No response text returned."
     except Exception as e:
         await interaction.followup.send(f"Gemini request failed: {e}")

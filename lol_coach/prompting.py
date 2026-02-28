@@ -11,10 +11,10 @@ def read_prompt_template(prompt_path: str) -> str:
 
 
 def build_prompt(games_data: list[dict], prompt_path: str) -> str:
-    """Inject serialized *games_data* into the prompt template."""
+    """Inject serialized games_data into the prompt template."""
     template = read_prompt_template(prompt_path)
     data_text = json.dumps(games_data, ensure_ascii=True)
-    marker = "[COPIER LES DONNEES CSV/JSON ICI]"
+    marker = "[DATA]"
     if marker in template:
         return template.replace(marker, data_text)
     return f"{template}\n\n{data_text}"

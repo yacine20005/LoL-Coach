@@ -26,10 +26,6 @@ def extract_items(participant: dict) -> list[int]:
     return [participant.get(f"item{i}", 0) for i in range(7)]
 
 
-# ---------------------------------------------------------------------------
-# Private helpers — each returns a partial record for one logical category
-# ---------------------------------------------------------------------------
-
 def _position_fields(participant: dict) -> dict:
     return {
         "champion": participant["championName"],
