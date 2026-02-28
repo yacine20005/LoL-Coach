@@ -1,6 +1,7 @@
-def chunk_text(text, limit=1900):
-    chunks = []
-    current = []
+def chunk_text(text: str, limit: int = 1900) -> list[str]:
+    """Split *text* into chunks that each fit within *limit* characters."""
+    chunks: list[str] = []
+    current: list[str] = []
     current_len = 0
 
     for line in text.splitlines():
