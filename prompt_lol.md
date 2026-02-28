@@ -86,6 +86,6 @@ Structure :
 
 ## DONNÉES À ANALYSER
 
-[COPIER LES DONNÉES CSV/JSON ICI]
+[DATA]
 
 Commence maintenant.
